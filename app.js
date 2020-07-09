@@ -8,8 +8,10 @@ var config = require('./config/database.dev');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var studentRouter = require('./routes/student');
+var teacherRouter = require('./routes/teacher');
 
 var cors = require('cors');
+const teacher = require('./models/teacher');
 var app = express();
 
 // view engine setup
@@ -26,6 +28,7 @@ app.use(cors());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/student', studentRouter);
+app.use('/teacher', teacherRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

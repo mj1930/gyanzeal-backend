@@ -18,6 +18,7 @@ module.exports =  class StudentController {
             state: userData.state,
             city: userData.city,
             gender: userData.gender,
+            password: await crypt.hashPassword('gyanzeal123'),
             isActive: true,
             isDeleted: false
         }
@@ -27,6 +28,12 @@ module.exports =  class StudentController {
             $or : [
                 {
                     email: userData.email
+                },
+                {
+                    isDeleted: false
+                },
+                {
+                    isActive: false
                 }
             ]
         });

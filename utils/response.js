@@ -12,9 +12,8 @@ class ResponseUtil {
                 obj.data = data;
             }
             if(optionalData) {
-                obj = {...obj, ...optionalData}
+                obj = {...obj, ...optionalData };
             }
-            obj.message = localizify.translate(message)
         } catch (ex) {
             console.log('Error @ getResponse ', ex);
         } finally {

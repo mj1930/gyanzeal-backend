@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const studentCtrl = require('../controllers/student');
+responeCtrl = require('../utils/response');
+const teacherCtrl = require('../controllers/teacher');
 
-router.post('/studentSignUp', async (req, res) => {
-    const studentCtrlFucntion = new studentCtrl();
-    const result = await studentCtrlFucntion.register(req);
+router.post('/teacherSignUp', async (req, res) => {
+    const teacherFunction = new teacherCtrl();
+    const result = await teacherFunction.register(req);
     // Get Structure Response
     let response = '';
     if (result.isExist > 0) {
@@ -13,13 +14,13 @@ router.post('/studentSignUp', async (req, res) => {
         if (!result.isExists) {
             res.status(200).send({
                 status: 200,
-                data: result.studentData,
+                data: result.teacherData,
                 message: "An Email has been sent successfully to your email. Please Check."
             });
         } else {
             res.status(201).send({
                 status: 201,
-                data: result.studentData,
+                data: result.teacherData,
                 message: "User already Exists"
             });
         }
