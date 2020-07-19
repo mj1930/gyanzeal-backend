@@ -27,4 +27,31 @@ router.post('/teacherSignUp', async (req, res) => {
     }
 });
 
+router.post('/login', async (req, res) => {
+    const teacherCtrlFucntion = new teacherCtrl();
+    const result = await teacherCtrlFucntion.login(req, res);
+    if (result && result.isExists === 1) {
+        res.status(200).send({
+            status: 200,
+            data: result.studentData,
+            message: 'Login Successful'
+        });
+    } else if (result.isExists === 0){
+        res.status(201).send({
+            status: 201,
+            message: "User doesn't exists"
+        });
+    } else if (result.isExists === 2) {
+        res.status(201).send({
+            status: 201,
+            message: "Password not matching"
+        });
+    } else {
+        res.status(202).send({
+            status: 202,
+            message: "error while login"
+        });
+    }
+});
+
 module.exports = router;

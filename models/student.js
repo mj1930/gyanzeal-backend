@@ -65,6 +65,10 @@ let userSchema = new Schema({
     courses: {
         type: Array,
         default: []
+    },
+    isLoggedIn: {
+        type: Boolean,
+        default: false
     }
 }, {
     collection: 'student'

@@ -82,6 +82,10 @@ let teacherSchema = new Schema({
     courses: {
         type: Array,
         default: []
+    },
+    isLoggedIn: {
+        type: Boolean,
+        default: false
     }
 }, {
     collection: 'teacher'
