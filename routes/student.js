@@ -26,7 +26,7 @@ router.post('/login', async (req, res) => {
         res.status(200).send({
             status: 200,
             data: result.studentData,
-            token: result,token,
+            token: result.token,
             message: 'Login Successful'
         });
     } else if (result.isExists === 0){

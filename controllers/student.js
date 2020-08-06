@@ -3,6 +3,7 @@
 let crypt = new(require('../utils/crypt'));
 let studentModel = require('../models/student');
 let bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken')
 
 module.exports =  class StudentController {
     constructor() {}
