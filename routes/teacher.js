@@ -33,7 +33,8 @@ router.post('/login', async (req, res) => {
     if (result && result.isExists === 1) {
         res.status(200).send({
             status: 200,
-            data: result.studentData,
+            data: result.teacherData,
+            token: result.token,
             message: 'Login Successful'
         });
     } else if (result.isExists === 0){

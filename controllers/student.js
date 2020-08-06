@@ -92,9 +92,16 @@ module.exports =  class StudentController {
                 let isMatch = await bcrypt.compare(password, studentData.password);
                 if (isMatch) {
                     delete studentData['password'];
+                    let token = jwt.sign({
+                        emailAddress: studentData.email,
+                        isStudent: true
+                    }, process.env.APP_SECRET, {
+                        expiresIn: '24h' // expires in 24 hours
+                    });
                     return {
                         isExists: 1,
-                        studentData
+                        studentData,
+                        token
                     }
                 }
             }

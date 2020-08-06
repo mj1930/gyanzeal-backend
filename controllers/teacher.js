@@ -3,6 +3,7 @@
 let crypt = new(require('../utils/crypt'));
 let teacherModel = require('../models/teacher');
 let bcrypt = require('bcrypt');
+let jwt = require('jsonwebtoken');
 
 module.exports =  class TeacherController {
     constructor() {
@@ -41,7 +42,7 @@ module.exports =  class TeacherController {
     }
 
     async login(req, res) {
-        let studentData = {};
+        let teacherData = {};
         let data = req.body.loginData;
         let userMail = data.email;
         let password = data.password;
@@ -61,11 +62,11 @@ module.exports =  class TeacherController {
         });
         if (!isExists) {
             return  {
-                studentData,
+                teacherData,
                 isExists
             };
         } else {
-            studentData = await teacherModel.findOne({
+            teacherData = await teacherModel.findOne({
                 $and: [
                     {
                         email: userMail
@@ -78,13 +79,20 @@ module.exports =  class TeacherController {
                     }
                 ]
             }).lean();
-            if (studentData) {
-                let isMatch = await bcrypt.compare(password, studentData.password);
+            if (teacherData) {
+                let isMatch = await bcrypt.compare(password, teacherData.password);
                 if (isMatch) {
-                    delete studentData['password'];
+                    delete teacherData.password;
+                    let token = jwt.sign({
+                        emailAddress: teacherData.email,
+                        isTeacher: true
+                    }, process.env.APP_SECRET, {
+                        expiresIn: '24h' // expires in 24 hours
+                    });
                     return {
                         isExists: 1,
-                        studentData
+                        teacherData,
+                        token
                     }
                 }
             }
