@@ -36,6 +36,144 @@ $('.dropdown-menu').on('click', function(){
 
 
 $(document).ready(function(){
+
+    // Teacher Signup Select Subject And Courses
+    var classSelected = 0;
+    var subjectSelected = 0;
+    var teacherSubjectList = [];
+    $('#teacher-select-class-scholastic').on('change', function(){
+        classSelected = $(this).val();
+    });
+
+    $('#teacher-select-subject-scholastic').on('change', function(){
+        subjectSelected = $(this).val();
+    });
+
+    $('.add-subject-to-list').on('click', function(e){
+        e.preventDefault();
+        console.log(subjectSelected);
+        $.each(subjectSelected, function(index,value){
+            teacherSubjectList.push(value + ' (' + classSelected + ')  &nbsp;&nbsp;&nbsp;<i class="fas fa-times"></i>');
+        });
+
+        $.each(teacherSubjectList, function(index,value){
+            let btnn = '<button class="btn btn-sm text-dark align-middle bg-white rounded py-1 px-2 font-large subject-name-list crossbox" style="font-size: 0.8em;">'+ value +'</button>';
+            $('.no-subject').hide();
+            $('.teacher-subject-list').append(btnn);
+        });
+        subjectSelected = 0;
+        teacherSubjectList = [];
+        $('.teacher-subject-list').append('<script>$(".crossbox").on("click",function(e){e.preventDefault(),$(this).remove(),0==$(".crossbox").length&&$(".no-subject").show()});</script>');
+    });
+
+    // Teacher Signup Select GZ Special Courses
+    var classSelectedGZ = 0;
+    var subjectSelectedGZ = 0;
+    var teacherSubjectListGZ = [];
+    $('#gz-special-course-name').on('change', function(){
+        classSelectedGZ = $(this).val();
+    });
+
+    $('#gz-subject-name').on('change', function(){
+        subjectSelectedGZ = $(this).val();
+    });
+
+    $('.add-course-to-list').on('click', function(e){
+        e.preventDefault();
+        console.log(subjectSelectedGZ);
+        $.each(subjectSelectedGZ, function(index,value){
+            teacherSubjectListGZ.push(value + ' (' + classSelectedGZ + ')  &nbsp;&nbsp;&nbsp;<i class="fas fa-times"></i>');
+        });
+
+        $.each(teacherSubjectListGZ, function(index,value){
+            let btnn = '<button class="btn btn-sm text-dark align-middle bg-white rounded py-1 px-2 font-large course-name-list crossbox" style="font-size: 0.8em;">'+ value +'</button>';
+            $('.no-subject').hide();
+            $('.teacher-subject-list').append(btnn);
+        });
+        subjectSelectedGZ = 0;
+        teacherSubjectListGZ = [];
+        
+        $('.teacher-subject-list').append('<script>$(".crossbox").on("click",function(e){e.preventDefault(),$(this).remove(),0==$(".crossbox").length&&$(".no-subject").show()});</script>');
+
+    });
+
+
+    // Call Back Request Page Starts
+
+    $('.userRequestType').on('change', function(){
+        let selected = $(this).val();
+        if(selected == 2){
+            $('.batch-request').removeClass('d-none');
+        }else{
+            $('.batch-request').addClass('d-none');
+        }
+    });
+
+    $('.batchCourseType').on('change', function(){
+        let selected = $(this).val();
+        if(selected == 1){
+            $('.academicRequest').removeClass('d-none');
+            $('.GZRequest').addClass('d-none');
+        }else{
+            $('.GZRequest').removeClass('d-none');
+            $('.academicRequest').addClass('d-none');
+        }
+    });
+
+    $('.GZCourse').on('change', function(){
+        let selected = $(this).val();
+        if(selected == 00){
+            $('.RequestedCourse').removeClass('d-none');
+        }else{
+            $('.RequestedCourse').addClass('d-none');
+        }
+    });
+
+    $('.checkallreport').on('change', function(){
+        if($(this).is(':checked')){
+            $('.checkreport').attr('checked', true);
+        }else{
+            $('.checkreport').attr('checked', false);
+        }
+    });
+
+    // Callback Request Page Ends
+
+    // Admin Add Money To Wallet Start
+    $('.selectStudent').on('click', function(){
+        $('.studentIDforWallet').removeClass('d-none');
+        $('.close').click();
+    });
+    // Admin Add Money To Wallet Ends
+
+
+
+
+
+    // Admin Create Batch Start
+    $('.selectTeacher').on('click', function(){
+        $('.close').click();
+        $('.BatchTeacherDetail').removeClass('d-none');
+    });
+
+    $('.batch-curriculum-type').on('change', function(){
+       let selected = $(this).val();
+       if(selected == 2){
+            $('.new_curriculum').removeClass('d-none');
+            $('.default_curriculum').addClass('d-none');
+            $('.update_curriculum').addClass('d-none');
+       }else if(selected == 3){
+            $('.new_curriculum').addClass('d-none');
+            $('.default_curriculum').addClass('d-none');
+            $('.update_curriculum').removeClass('d-none');
+       }else{
+            $('.default_curriculum').removeClass('d-none');
+            $('.new_curriculum').addClass('d-none');
+            $('.update_curriculum').addClass('d-none');
+       }
+    });
+    // Admin Create Batch Ends
+
     $('.left-btn').on('click', function(){
         $('.left-btn').removeClass('primary-color-dark text-white');
         $('.left-btn').addClass('bg-white');
@@ -76,6 +214,77 @@ $(document).ready(function(){
         searching: false, 
         paging: false, 
         info: false
+    });
+
+    var table = $('#teacher-details-table').DataTable({
+        responsive: true,
+        searching: true, 
+        paging: true, 
+        info: true
+    });
+
+    var table = $('#class-subject-table').DataTable({
+        responsive: true,
+        searching: true, 
+        paging: true, 
+        info: true
+    });
+
+    var table = $('#student-details-table').DataTable({
+        responsive: true,
+        searching: true, 
+        paging: true, 
+        info: true
+    });
+
+    var table = $('#student-gz-details').DataTable({
+        responsive: true,
+        searching: true, 
+        paging: true, 
+        info: true
+    });
+
+    var table = $('#teacher-gz-details-table').DataTable({
+        responsive: true,
+        searching: true, 
+        paging: true, 
+        info: true
+    });
+
+
+    var table = $('#subject-only-table').DataTable({
+        responsive: true,
+        searching: true, 
+        paging: true, 
+        info: true
+    });
+
+    var studentTable = $('#student-search-table').DataTable({
+        responsive: true,
+        searching: false, 
+        paging: true, 
+        info: true
+    });
+
+    var TeacherSerach = $('#teacher-search-table-for-batch').DataTable({
+        responsive: true,
+        searching: true, 
+        paging: true, 
+        info: true
+    });
+    
+    var bdtable = $('#academics-batch-details-table').DataTable({
+        responsive: true,
+        searching: true, 
+        paging: true, 
+        info: true
+    });
+
+    var gzbdtable = $('#GZ-batch-details-table').DataTable({
+        responsive: true,
+        searching: true, 
+        paging: true, 
+        info: true
     });
 
     $('#cc').on('change', function(){
@@ -177,4 +386,21 @@ $(document).ready(function(){
         return current;
     }
     
+
+
+
+    $('#selectclass, .cn').on('change', function(){
+        let val = $(this).val();
+        if(val !== 0){
+            $('.video-embed, .previous').removeClass('d-none');
+        }else{
+            $('.video-embed, .previous').addClass('d-none');
+        }
+    });
+
+    
+
+    $('.course-cc').on('change', function(){
+        $('.video-embed, .previous').addClass('d-none');
+    });
 });

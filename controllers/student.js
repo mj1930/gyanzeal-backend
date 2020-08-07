@@ -25,7 +25,7 @@ module.exports =  class StudentController {
         let studentData;
         let isExists = 0;
         isExists = await studentModel.countDocuments({
-            $or : [
+            $and : [
                 {
                     email: userData.email
                 },
