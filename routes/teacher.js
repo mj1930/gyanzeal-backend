@@ -3,7 +3,7 @@ const router = express.Router();
 responeCtrl = require('../utils/response');
 const teacherCtrl = require('../controllers/teacher');
 
-router.post('/teacherSignUp', async (req, res) => {
+router.post('/teacher-signup', async (req, res) => {
     const teacherFunction = new teacherCtrl();
     const result = await teacherFunction.register(req);
     // Get Structure Response
@@ -29,7 +29,7 @@ router.post('/teacherSignUp', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const teacherCtrlFucntion = new teacherCtrl();
-    const result = await teacherCtrlFucntion.login(req, res);
+    const result = await teacherCtrlFucntion.login(req);
     if (result && result.isExists === 1) {
         res.status(200).send({
             status: 200,
@@ -46,6 +46,52 @@ router.post('/login', async (req, res) => {
         res.status(201).send({
             status: 201,
             message: "Password not matching"
+        });
+    } else {
+        res.status(202).send({
+            status: 202,
+            message: "error while login"
+        });
+    }
+});
+
+router.post('/update-profile', async (req, res) => {
+    const teacherCtrlFucntion = new teacherCtrl();
+    const result = await teacherCtrlFucntion.updateProfile(req);
+    if (result && Object.keys(result).length > 0) {
+        res.status(200).send({
+            status: 200,
+            data: result,
+            message: 'Data Retrieved Succesfully'
+        });
+    } else if (result && Object.keys(result).length == 0) {
+        res.status(201).send({
+            status: 201,
+            data: {},
+            message: 'No data found'
+        });
+    } else {
+        res.status(202).send({
+            status: 202,
+            message: "error while login"
+        });
+    }
+});
+
+router.get('/fetch-profile', async (req, res) => {
+    const teacherCtrlFucntion = new teacherCtrl();
+    const result = await teacherCtrlFucntion.findTeacherProfile(req);
+    if (result && Object.keys(result).length > 0) {
+        res.status(200).send({
+            status: 200,
+            data: result,
+            message: 'Data Retrieved Succesfully'
+        });
+    } else if (result && Object.keys(result).length == 0) {
+        res.status(201).send({
+            status: 201,
+            data: {},
+            message: 'No data found'
         });
     } else {
         res.status(202).send({

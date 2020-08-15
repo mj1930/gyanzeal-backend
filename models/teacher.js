@@ -46,6 +46,10 @@ let teacherSchema = new Schema({
         required: false,
         default: true
     },
+    status: {
+        type: String,
+        default: 'unverified'
+    },
     created_at: {
         type: Date,
         default: Date.now
@@ -86,6 +90,22 @@ let teacherSchema = new Schema({
     isLoggedIn: {
         type: Boolean,
         default: false
+    },
+    classes: {
+        type: Array,
+        default: []
+    },
+    typeofTeacher: {
+        type: String,
+        default: 'scholastic' // Scholastic Or GZ Specials(gzSpecial) or // both
+    },
+    gzclasses: {
+        type: Array,
+        default: []
+    },
+    filePath: {
+        type: String,
+        default: ''
     }
 }, {
     collection: 'teacher'

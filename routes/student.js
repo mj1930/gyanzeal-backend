@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const studentCtrl = require('../controllers/student');
 
-router.post('/studentSignUp', async (req, res) => {
+router.post('/student-signUp', async (req, res) => {
     const studentCtrlFucntion = new studentCtrl();
     const result = await studentCtrlFucntion.register(req);
     if (!result.isExists) {

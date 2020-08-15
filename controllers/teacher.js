@@ -4,6 +4,16 @@ let crypt = new(require('../utils/crypt'));
 let teacherModel = require('../models/teacher');
 let bcrypt = require('bcrypt');
 let jwt = require('jsonwebtoken');
+const nodemailer = require("nodemailer");
+const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_PASSWORD,
+    }
+});
 
 module.exports =  class TeacherController {
     constructor() {
@@ -14,8 +24,15 @@ module.exports =  class TeacherController {
         userData.password = await crypt.hashPassword('gyanzeal123');
         let teacherData;
         let isExists = 0;
+        if (userData['gzcourses'].length > 0 && userData['gzclasses'].length > 0) {
+            userData['typeofTeacher'] = 'both';
+        } else if (userData['gzclasses'].length > 0 && userData['gzcourses'].length == 0) {
+            userData['typeofTeacher'] = 'gzSpecial';
+        } else {
+            userData['typeofTeacher'] = 'scholastic';
+        }
         isExists = await teacherModel.countDocuments({
-            $or : [
+            $and : [
                 {
                     email: userData.email
                 },
@@ -23,7 +40,7 @@ module.exports =  class TeacherController {
                     isDeleted: false
                 },
                 {
-                    isActive: false
+                    isActive: true
                 }
             ]
         });
@@ -34,6 +51,7 @@ module.exports =  class TeacherController {
             };
         } else {
             teacherData = await teacherModel.create(userData);
+            this.sendMail(userData.email);
             return {
                 teacherData,
                 isExists
@@ -41,7 +59,7 @@ module.exports =  class TeacherController {
         }
     }
 
-    async login(req, res) {
+    async login(req) {
         let teacherData = {};
         let data = req.body.loginData;
         let userMail = data.email;
@@ -98,4 +116,47 @@ module.exports =  class TeacherController {
             }
         }
     }
+
+    async updateProfile(req) {
+        let data = req.body.teacherData;
+        let email = data['email'];
+        try {
+            let updateData = await teacherModel.findOneAndUpdate({
+                email
+            }, {
+                $set: {data}
+            }).lean();
+            return updateData;
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    async findTeacherProfile(req) {
+        let email = req.query.email;
+        try {
+            let profileData = await teacherModel.findOne({
+                email
+            }, {password: 0}).lean();
+            return profileData;
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    sendMail(email) {
+        transporter.sendMail({
+            from: `"ADMIN", ${process.env.GMAIL_USER}`, // sender address
+            to: email, // list of receivers
+            subject: "Temporary Password", // Subject line
+            // text: "Hello world?", // plain text body
+            html: "<b>Please find your password below</b><br><b>Password: </b>gyanzeal123", // html body
+        }).then((err, info) => {
+            if (err) {
+                throw err;
+            }
+        });
+    }
+
+
 }

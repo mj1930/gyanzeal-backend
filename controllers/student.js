@@ -3,8 +3,17 @@
 let crypt = new(require('../utils/crypt'));
 let studentModel = require('../models/student');
 let bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken')
-
+const jwt = require('jsonwebtoken');
+const nodemailer = require("nodemailer");
+const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_PASSWORD,
+    }
+});
 module.exports =  class StudentController {
     constructor() {}
 
@@ -33,7 +42,7 @@ module.exports =  class StudentController {
                     isDeleted: false
                 },
                 {
-                    isActive: false
+                    isActive: true
                 }
             ]
         });
@@ -44,6 +53,7 @@ module.exports =  class StudentController {
             };
         } else {
             studentData = await studentModel.create(dataToSave);
+            this.sendMail(userData.email);
             return {
                 studentData,
                 isExists
@@ -107,5 +117,19 @@ module.exports =  class StudentController {
                 }
             }
         }
+    }
+
+    async sendMail(email) {
+        transporter.sendMail({
+            from: `"ADMIN", ${process.env.GMAIL_USER}`, // sender address
+            to: email, // list of receivers
+            subject: "Temporary Password", // Subject line
+            // text: "Hello world?", // plain text body
+            html: "<b>Please find your password below</b><br><b>Password: </b>gyanzeal123", // html body
+        }).then((err, info) => {
+            if (err) {
+                throw err;
+            }
+        });
     }
 }
