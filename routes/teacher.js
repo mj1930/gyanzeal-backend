@@ -37,12 +37,12 @@ router.post('/login', async (req, res) => {
             token: result.token,
             message: 'Login Successful'
         });
-    } else if (result.isExists === 0){
+    } else if (result && result.isExists === 0){
         res.status(201).send({
             status: 201,
             message: "User doesn't exists"
         });
-    } else if (result.isExists === 2) {
+    } else if (result && result.isExists === 2) {
         res.status(201).send({
             status: 201,
             message: "Password not matching"

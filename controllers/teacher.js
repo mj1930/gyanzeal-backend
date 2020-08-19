@@ -1,10 +1,14 @@
 // import student from '../models/student';
 
-let crypt = new(require('../utils/crypt'));
-let teacherModel = require('../models/teacher');
-let bcrypt = require('bcrypt');
+const crypt = new(require('../utils/crypt'));
+const teacherModel = require('../models/teacher');
+const bankModel = require('../models/bank-details');
+const addressModel = require('../models/address');
+const bcrypt = require('bcrypt');
 let jwt = require('jsonwebtoken');
 const nodemailer = require("nodemailer");
+const address = require('../models/address');
+const teacher = require('../models/teacher');
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
@@ -51,6 +55,16 @@ module.exports =  class TeacherController {
             };
         } else {
             teacherData = await teacherModel.create(userData);
+            let addressData = {
+                teacherId: teacherData['_id'],
+                street1:userData.address1,
+                street2:userData.address2,
+                state:userData.state,
+                city:userData.city,
+                country:userData.country,
+                pin:userData.pinCode
+            };
+            await addressModel.create(addressData);
             this.sendMail(userData.email);
             return {
                 teacherData,
@@ -118,7 +132,7 @@ module.exports =  class TeacherController {
     }
 
     async updateProfile(req) {
-        let data = req.body.teacherData;
+        let data = req.body.profileData;
         let email = data['email'];
         try {
             let updateData = await teacherModel.findOneAndUpdate({
@@ -126,7 +140,41 @@ module.exports =  class TeacherController {
             }, {
                 $set: {data}
             }).lean();
-            return updateData;
+            let addressData = {
+                teacherId: updateData['_id'],
+                street1:data.address1,
+                street2:data.address2,
+                state:data.state,
+                city:data.city,
+                country:data.country,
+                pin:data.pinCode
+            };
+            let addressObj = await addressModel.findOneAndUpdate({
+                teacherId: addressData.teacherId
+            }, {
+                $set: {
+                    addressData
+                }
+            });
+            let bankObj = {
+                teacherId: updateData['_id'],
+                pan: data.pan,
+                aadhar: data.aadhar,
+                bankName: data.bankName,
+                accountNumber: data.accountNumber,
+                ifscCode: data.ifscCode,
+                upi: data.upi
+            };
+            let bankDetails = await bankModel.findOneAndUpdate({
+                accountNumber: bankObj.accountNumber
+            }, {
+                $set: {
+                    bankObj
+                }
+            });
+            let returnData = {};
+            Object.assign(returnData, updateData, bankDetails, addressObj);
+            return returnData;
         } catch (e) {
             throw e;
         }
@@ -138,7 +186,15 @@ module.exports =  class TeacherController {
             let profileData = await teacherModel.findOne({
                 email
             }, {password: 0}).lean();
-            return profileData;
+            let addressData = await addressModel.findOne({
+                teacherId: profileData['_id']
+            }).lean();
+            let bankData = await bankModel.findOne({
+                teacherId: profileData['_id']
+            }).lean();
+            let returnObj = {};
+            Object.assign(returnObj, profileData, bankData, addressData);
+            return returnObj;
         } catch (e) {
             throw e;
         }

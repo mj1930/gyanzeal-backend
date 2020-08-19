@@ -9,6 +9,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var studentRouter = require('./routes/student');
 var teacherRouter = require('./routes/teacher');
+var coursesRouter = require('./routes/course');
 
 var cors = require('cors');
 const teacher = require('./models/teacher');
@@ -29,6 +30,7 @@ app.use('/api', indexRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/student', studentRouter);
 app.use('/api/teacher', teacherRouter);
+app.use('/api/course', coursesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

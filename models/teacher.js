@@ -21,16 +21,6 @@ let teacherSchema = new Schema({
         required: true,
         default: ''
     },
-    state: {
-        type: String,
-        required: true,
-        default: ''
-    },
-    city: {
-        type: String,
-        required: true,
-        default: ''
-    },
     gender: {
         type: String, // male / female
         required: true,

@@ -61,7 +61,7 @@ module.exports =  class StudentController {
         }
     }
 
-    async login(req, res) {
+    async login(req) {
         let studentData = {};
         let data = req.body.loginData;
         let userMail = data.email;
@@ -131,5 +131,9 @@ module.exports =  class StudentController {
                 throw err;
             }
         });
+    }
+
+    async updateStudentData() {
+        
     }
 }

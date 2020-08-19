@@ -2,44 +2,44 @@ require('../common/common')
 /**
  * Schema for User
  */
-let bankDetailSchema = new Schema({
+const addressSchema = new Schema({
     teacherId: {
         type: Schema.Types.ObjectId,
         ref: "teachers",
-        required: true
+        required: false
     },
-    pan: {
+    studentId: {
+        type: Schema.Types.ObjectId,
+        ref: "students",
+        required: false
+    },
+    street1: {
         type: String,
-        required: true
+        required: false
     },
-    aadhar: {
+    street2: {
         type: String,
-        required: true
+        required: false
     },
-    bankName: {
+    pin: {
         type: String,
         required: false,
         default: ''
     },
-    accountNumber: {
+    country: {
         type: String,
-        required: true,
-        default: ''
-    },
-    ifscCode: {
-        type: String,
-        required: true,
-        default: ''
-    },
-    upi: {
-        type: String,
-        required: true,
-        default: ''
-    },
-    isActive: {
-        type: Boolean,
         required: false,
-        default: true
+        default: ''
+    },
+    state: {
+        type: String,
+        required: false,
+        default: ''
+    },
+    city: {
+        type: String,
+        required: false,
+        default: ''
     },
     created_at: {
         type: Date,
@@ -55,8 +55,8 @@ let bankDetailSchema = new Schema({
         default: false
     }
 }, {
-    collection: 'bankDetail'
+    collection: 'address'
     // strict: false
 });
 
-module.exports = mongoose.model('bankDetail', bankDetailSchema);
+module.exports = mongoose.model('address', addressSchema);
